@@ -1,0 +1,38 @@
+void main() {
+  int x;
+  while(1){
+    x = input();
+    if(x < 1000)
+    {
+      x = x - 500;
+    }
+    else{}
+    if(x<800)
+    {
+      x = x - 400;
+    }
+     else{}
+    if(x<600)
+    {
+      x = x - 300;
+    }
+     else{}
+    if(x<400)
+    {
+      x = x - 200;
+    }
+     else{}
+    if(x<200)
+    {
+      x = x - 100;
+    }
+     else{}
+    if(x>1000)
+    {
+      x = x - 500;
+    }
+     else{}
+  }
+}
+
+

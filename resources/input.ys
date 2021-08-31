@@ -1,0 +1,5 @@
+(define symvar125345695::int)
+(define symvar1155789338::int)
+(assert ( and ( and ( and ( and ( and ( and true ( < symvar125345695 8)) ( > symvar125345695 symvar1155789338)) ( not ( < ( - symvar125345695 10) ( - symvar1155789338 10)))) ( < ( - symvar125345695 10) 8)) ( not ( > ( - symvar125345695 10) 8))) ( not ( < ( - ( - symvar125345695 10) 10) ( - 8 10)))))
+(check)
+(show-model)

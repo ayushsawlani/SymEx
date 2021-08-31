@@ -1,0 +1,22 @@
+result path = <graph-BB1->BB2 graph-BB2->D3 graph-D3->BB4 graph-BB4->D5 graph-D5->BB6 graph-BB6->D7 graph-D7->BB8 graph-BB8->BB10 graph-BB10->BB12 graph-BB12->BB14 graph-BB14->D15 graph-D15->BB16 graph-BB16->BB18 graph-BB18->WHILE graph-WHILE->BB2 >
+Unsatisfiable
+
+----------true
+
+----------graph-D15->BB16
+result path = <graph-BB17->BB18 graph-BB18->WHILE graph-WHILE->BB2 graph-BB2->D3 graph-D3->BB4 graph-BB4->D5 graph-D5->BB6 graph-BB6->D7 graph-D7->BB8 graph-BB8->BB10 graph-BB10->BB12 graph-BB12->BB14 graph-BB14->D15 graph-D15->BB16 graph-BB16->BB18 graph-BB18->WHILE graph-WHILE->BB2 >
+Unsatisfiable
+
+----------true
+
+----------graph-D15->BB16
+result path = <graph-BB17->BB18 graph-BB18->WHILE graph-WHILE->BB2 graph-BB2->D3 graph-D3->BB4 graph-BB4->D5 graph-D5->BB6 graph-BB6->D7 graph-D7->BB8 graph-BB8->BB10 graph-BB10->BB12 graph-BB12->BB14 graph-BB14->D15 graph-D15->BB16 graph-BB16->BB18 graph-BB18->WHILE graph-WHILE->BB2 >
+Unsatisfiable
+
+----------true
+
+----------graph-D3->BB4
+result path = <graph-BB13->BB14 graph-BB14->D15 graph-D15->BB16 graph-BB16->BB18 graph-BB18->WHILE graph-WHILE->BB2 >
+Test Seq: {y=[61], x=[61]}
+
+---- TIME - Symtest : 518.688393ms ----
