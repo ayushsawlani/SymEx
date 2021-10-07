@@ -1,9 +1,9 @@
 	void main() 
-	{
-		 int x = input();
+	{		 
 		 int y = 0;
 		 int c = 0;
-		 while ((x>10)&&(x<110)&&(c<max_count)) {
+		 while ((x>10)&&(x<110)) {
+			int x = input();
 	        	if (x > 50)
 	        	{
 	        		y = y + 2;
