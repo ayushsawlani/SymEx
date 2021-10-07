@@ -50,8 +50,8 @@ public class SymTest_basic extends SymTest {
 	public TestSequence generateTestSequence() {
 		TestSequence testseq = null;
 		try {
-			
 			//EXTRA
+			//System.out.println("\nReached1");
 			Set<ICFEdge> terminalEdgeSet = new HashSet<ICFEdge>();
 			terminalEdgeSet.add(mCFG.getStopNode().getOutgoingEdge());
 			Set<IEdge> terminalTarget = convertTargetEdgesToGraphEdges(terminalEdgeSet);
@@ -72,19 +72,22 @@ public class SymTest_basic extends SymTest {
 				// Obtain the path that traverses the targets.
 				IPath path;
 				if (!hasEncounteredMaximumIterations(completePath)) {
+					//System.out.println("\nReached2");
 					FindCFPathAlgorithm algorithm = new FindCFPathAlgorithm(
 							this.mGraph, currentTargets,
 							this.mConvertor.getGraphNode(this.mTarget));
 
 					if (stack.size() != 1) {
-
 						path = algorithm.findCFPath(stack.peek().getFirst()
 								.getHead(), currentTargets);
+						//System.out.println("\nReached3");
 					} else {
 						prefix.add(startEdge);
 						path = algorithm.findCFPath(stack.peek().getFirst()
 								.getHead(), currentTargets);
+						//System.out.println("\nReached3");
 					}
+					
 				} else {
 					// If maximum iterations are done, it is only an empty path
 					// that gets added
@@ -94,8 +97,9 @@ public class SymTest_basic extends SymTest {
 //							this.mConvertor.getGraphNode(this.mTarget));
 //					path = algorithm.findLongestAcyclicPath(stack.peek().getFirst()
 //								.getHead(), currentTargets);
-//					System.out.println("FINAL PATH : " + path);
+					//System.out.println("\nFINAL PATH : " + path);
 				}
+				System.out.println("Working!!!");
 				completePath.setPath(addprefix(prefix, path.getPath()));
 				ArrayList<ICFEdge> cfPath = convertPathEdgesToCFGEdges(completePath);
 
@@ -103,7 +107,7 @@ public class SymTest_basic extends SymTest {
 				set = SymTestUtil.getSET(cfPath, this.mCFG);
 				// Solve the predicate
 				SolverResult solution;
-				
+				System.out.println("\nComplete cfPath: " + cfPath);
 				logger.fine("Complete cfPath: " + cfPath);
 //				if (currentTargets.isEmpty()) {
 					try {

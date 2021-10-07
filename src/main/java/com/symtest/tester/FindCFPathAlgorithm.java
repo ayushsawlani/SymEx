@@ -35,7 +35,6 @@ public class FindCFPathAlgorithm {
 	 * @throws Exception
 	 */
 	public FindCFPathAlgorithm(IGraph graph, Set<IEdge> targets, INode terminalNode) throws Exception {
-		
 		for(IEdge edge : targets) {
 			if(!graph.hasEdge(edge)) {
 				Exception e = new Exception("Can't construct FinCFPathAlgorithm: Not all members in targets set are contained in the graph.");
@@ -67,7 +66,6 @@ public class FindCFPathAlgorithm {
 		path = new Path(this.mGraph);
 		IPath head = this.findPathToLoopStartNode(this.mGraph.getRoot());
 		path.concatenate(head);
-		
 		logger.finer("FindCFPathAlgorihtm initialized");
 		logger.finer("path to loop start: " + path);
 
@@ -111,11 +109,13 @@ public class FindCFPathAlgorithm {
 		// Entries of this table are reset every time findLongestAcyclicPath is called 
 		// from findCFPath.
 	public IPath findLongestAcyclicPath(INode node, Set<IEdge> currentTargets) throws Exception {
+		//System.out.println("Findlongestacyclicpath in");
 		if(this.mTable == null) {
 			this.mTable = getEmptyTable();
 		}
 		if(!node.equals(this.mTargetNode)) {
 			for(IEdge e : node.getOutgoingEdgeList()) {
+				//System.out.println("for in");
  				IPath candidatePath = new Path(this.mGraph);
 				IPath candidateTail = findLongestAcyclicPath(e.getHead(), currentTargets);
 				int candidateLength = 0; // the number of target edges in the candidate path
@@ -125,9 +125,11 @@ public class FindCFPathAlgorithm {
 				// Otherwise, it is the same as the number of target edges in the longest path (in terms of the no. of 
 				// target edges in it)from e.head.
 				if(currentTargets.contains(e)) {
+					//System.out.println("DDDD4");
 					candidateLength = this.mTable.get(e.getHead()).mNumber + 1;
 				}
 				else {
+					//System.out.println("DDDD5");
 					candidateLength = this.mTable.get(e.getHead()).mNumber;
 				}
 				
@@ -139,11 +141,11 @@ public class FindCFPathAlgorithm {
 					this.mTable.put(node, new Pair(candidatePath, candidateLength));
 				}
 			}
+			//System.out.println("Findlongestacyclicpath out");
 		}
 		else {
 			this.mTable.put(node, new Pair(new Path(this.mGraph), 0));
 		}
-//		System.out.println(this.mTable.get(node).mPath.toString());
 		return this.mTable.get(node).mPath;
 	}
 	
@@ -157,14 +159,15 @@ public class FindCFPathAlgorithm {
 	}
 	
 	public IPath findCFPath(INode startNode, Set<IEdge> targets) throws Exception {
+		//System.out.println("findCFPath in");
 		logger.finer("start: " + startNode.getId() + " & path: " + path + " & targets: " + targets);
-		
 		Set<IEdge> currentTargets = new HashSet<IEdge>();
 		for(IEdge e : targets) {
 			currentTargets.add(e);
 		}
 		path = new Path(this.mGraph);
 		while(!currentTargets.isEmpty()) {
+			//System.out.println("while in");
 			this.mTable = getEmptyTable();
 			IPath newAcyclicPath = findLongestAcyclicPath(startNode, currentTargets);
 /*
@@ -185,6 +188,7 @@ public class FindCFPathAlgorithm {
 			if(mTargetNode.getOutgoingEdgeList().size() == 0) break;
 
 		}
+		//System.out.println("findCFPath out");
 		logger.finer("result path = " + path);
 		return path;
 	}
