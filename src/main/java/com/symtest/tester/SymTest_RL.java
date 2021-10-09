@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.logging.Logger;
+import java.io.*;
 
 import com.symtest.Solver.SolverResult;
 import com.symtest.cfg.ICFEdge;
@@ -19,6 +20,7 @@ import com.symtest.cfg.ICFGNode;
 import com.symtest.exceptions.UnSatisfiableException;
 import com.symtest.expression.IExpression;
 import com.symtest.expression.IIdentifier;
+import com.symtest.expression.True;
 import com.symtest.expression.Variable;
 import com.symtest.graph.IEdge;
 import com.symtest.graph.IGraph;
@@ -30,13 +32,14 @@ import com.symtest.set.SET;
 import com.symtest.set.SETBasicBlockNode;
 import com.symtest.set.SETNode;
 import com.symtest.utilities.Pair;
-
+import com.ibm.icu.impl.CalendarAstronomer.Ecliptic;
+import com.symtest.RL.*;
 import com.symtest.tester.SymTest;
 
 public class SymTest_RL extends SymTest {
 
 	private static final int MAXIMUM_ITERATIONS = 5;
-	
+	private Qtable my_table = new Qtable();
 	public SymTest_RL(ICFG cfg, Set<ICFEdge> targets) {
 		super(cfg, targets);
 	}
@@ -199,26 +202,223 @@ public class SymTest_RL extends SymTest {
 	 * @param stack
 	 * @param path that hets added newly
 	 */
-	Stack<Pair<IEdge, Boolean>> backtrack(
-			Stack<Pair<IEdge, Boolean>> stack) {
-		if (!stack.isEmpty()) {
-			Pair<IEdge, Boolean> topmostPair = stack.pop();
-			if (stack.isEmpty()) {
+	Stack<Pair<IEdge, Boolean>> backtrack(Stack <Pair<IEdge, Boolean>> stack) 
+	{
+		try
+		{
+			System.out.println("inside Backtrack\n");
+			/*
+			if (!stack.isEmpty()) {
+				Pair<IEdge, Boolean> topmostPair = stack.pop();
+				if (stack.isEmpty()) {
+					return stack;
+				}
+
+				// Push the other edge of the node with a false
+				if (topmostPair.getSecond()) {
+					IEdge newEdge = null;
+					IEdge oldEdge = topmostPair.getFirst();
+					newEdge = getOtherEdge(oldEdge);
+					stack.push(new Pair<IEdge, Boolean>(newEdge, false));
+	//				System.out.println("PUSH " + newEdge.getId());
+					return stack;
+				} else
+					return backtrack(stack);
+			} else
 				return stack;
+			//*/
+			
+			List <Pair <IEdge, Boolean>> computed_path_util = new ArrayList<Pair <IEdge, Boolean>> (stack);
+			Collections.reverse(computed_path_util);
+			List <IEdge> computed_path = new ArrayList <IEdge>();
+			for (Pair <IEdge, Boolean> it: computed_path_util)
+			{
+				computed_path.add(it.getFirst());
+			}
+				
+			int ptr2 = computed_path.size() - 1; 
+			int num_edges = State.Get_num_edges(); 
+			int ptr1 = Math.max(ptr2 - num_edges + 1, 0);
+			while(ptr2>=0)
+			{
+				//sublist of edges. 
+				// use that to create path
+				//use that to create a state. 
+				List <IEdge> state_edges = new ArrayList <IEdge> (computed_path.subList(ptr1, ptr2 + 1));
+				
+				
+				IPath state_path = new Path(mGraph);
+				state_path.setPath(state_edges);
+				
+				State curr_state = new State(state_path);
+				if(my_table.CheckState(curr_state)==false)
+				{
+					my_table.AddState(curr_state, 0.0);
+				}
+				
+				ptr2--;
+				if(ptr1>0)
+					ptr1--;
+			}
+			ptr2 = computed_path.size() - 1; 
+			num_edges = State.Get_num_edges(); 
+			ptr1 = Math.max(ptr2 - num_edges + 1, 0);
+			double max_reward = -100000; 
+			int back_track_point = -1; 
+			
+	
+			while(ptr2>=0)
+			{
+				//sublist of edges. 
+				// use that to create path
+				//use that to create a state.
+				
+				List <IEdge> state_edges = new ArrayList <IEdge> (computed_path.subList(ptr1, ptr2 + 1));
+				IPath state_path = new Path(mGraph);
+				state_path.setPath(state_edges);
+				
+				
+	
+				State curr_state = new State(state_path);
+				if((max_reward < my_table.GetValue(curr_state))&&(getOtherEdge(computed_path.get(ptr2))!=null))
+				{
+					System.out.println(my_table.GetValue(curr_state));
+					max_reward = my_table.GetValue(curr_state);
+					back_track_point = ptr2; 
+				}
+				ptr2 = ptr2 - 1;
+				if(ptr1>0)
+					ptr1 = ptr1 - 1;
+
+				double coin_toss = Math.random();
+				
+				if(coin_toss < 0.30)
+				{
+					while(true)
+					{
+						int explore_index = (int)(Math.random()*(computed_path.size()-1));
+						back_track_point = explore_index; 
+						if(getOtherEdge(computed_path.get(explore_index))!=null)
+							break;
+					}
+				}
+			}			
+			// policy update
+			//0.) compute reward from path after BTP. R1
+			//0.5) Make a local copy of targets and use them to create Rewards. 
+			//1.) Delete path after BTP
+			//2.) concatenate findpath after BTP
+			//3.) Use lsp
+			//4.) compute reward of lsp R2
+			//5.) R = R2 - R1
+			//6.) Update Qtable as R, R/2^r, R/2^2r and so on......
+			
+			//prefix_path, deleted_path, added_path. 
+			System.out.println(back_track_point);
+			System.out.println(computed_path.toString());
+
+			IPath prefix_path = new Path(mGraph); 
+			IPath deleted_path = new Path (mGraph);
+			IPath added_path = new Path(mGraph);
+
+			prefix_path.setPath(new ArrayList <IEdge> (computed_path.subList(0, back_track_point)));
+			deleted_path.setPath(new ArrayList <IEdge> (computed_path.subList(back_track_point, computed_path.size())));
+			Set<IEdge> curr_targets = new HashSet <IEdge>();
+			try{
+				curr_targets = convertTargetEdgesToGraphEdges(this.mTargets); 
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			curr_targets.removeAll(deleted_path.getPath());
+
+			FindCFPathAlgorithm algorithm = new FindCFPathAlgorithm( this.mGraph, 
+			curr_targets, this.mConvertor.getGraphNode(this.mTarget));
+
+			IPath acyclic_path = algorithm.findCFPath(getOtherEdge(computed_path.get(back_track_point)).getHead(), 
+													curr_targets);
+			
+			
+			IEdge break_edge = getOtherEdge(computed_path.get(back_track_point));
+			List <IEdge> updated_path_util = new ArrayList <IEdge> (computed_path.subList(0, back_track_point)); 
+			
+			updated_path_util.add(break_edge);
+			
+			for(IEdge edge: acyclic_path.getPath())
+			{
+				updated_path_util.add(edge); 
+			}
+			
+			IPath newpath = new Path(mGraph); 
+			newpath.setPath(updated_path_util);
+			List <ICFEdge> cfpath = convertPathEdgesToCFGEdges(newpath);
+
+			int satisfiableIndex = SymTestUtil
+							.getLongestSatisfiablePrefix(cfpath, mCFG);
+			
+			List<IEdge> satisfiablePrefix = new ArrayList <IEdge> (updated_path_util.subList(back_track_point, satisfiableIndex+1));
+			
+			added_path.setPath(satisfiablePrefix);
+
+			System.out.println(prefix_path.toString());			
+			System.out.println(deleted_path.toString());			
+			System.out.println(added_path.toString());
+
+
+			
+			IEdge startEdge = this.mConvertor.getGraphEdge(mCFG.getStartNode().getOutgoingEdgeList().get(0));
+			double Rew1 = my_table.GetReward(deleted_path, curr_targets, startEdge);
+			double Rew2 = my_table.GetReward(added_path, curr_targets, startEdge);
+
+			double net_rew = Rew2 - Rew1;
+
+			double decay_factor = 1; 
+			double factor = Math.pow(2, -decay_factor); 
+			double curr_factor = 1; 
+			
+			ptr2 = back_track_point-1; 
+			num_edges = State.Get_num_edges(); 
+			ptr1 = Math.max(ptr2 - num_edges + 1, 0);
+			while(ptr2>=0)
+			{
+				//sublist of edges. 
+				// use that to create path
+				//use that to create a state. 
+				List <IEdge> state_edges = new ArrayList <IEdge> (computed_path.subList(ptr1, ptr2+1));
+				IPath state_path = new Path(mGraph);
+				state_path.setPath(state_edges);
+				
+				State curr_state = new State(state_path);
+				
+				my_table.UpdateState(curr_state, my_table.GetValue(curr_state) +  net_rew*curr_factor);
+
+				ptr2--;
+				if(ptr1>0)
+					ptr1--;
+
+				curr_factor = curr_factor * factor;
 			}
 
-			// Push the other edge of the node with a false
-			if (topmostPair.getSecond()) {
-				IEdge newEdge = null;
-				IEdge oldEdge = topmostPair.getFirst();
-				newEdge = getOtherEdge(oldEdge);
-				stack.push(new Pair<IEdge, Boolean>(newEdge, false));
-//				System.out.println("PUSH " + newEdge.getId());
-				return stack;
-			} else
-				return backtrack(stack);
-		} else
+
+			
+			//stack update
+			stack.clear();
+			for(int i=0; i<back_track_point; i++)
+			{
+				stack.push(new Pair <IEdge, Boolean> (computed_path.get(i), false));
+			}
+			stack.push(new Pair <IEdge, Boolean> (computed_path.get(back_track_point), false));
+			//*/
 			return stack;
+		}
+		catch(Exception e)
+		{
+			System.out.println("Backtrack exception");	
+			stack.clear();
+			e.printStackTrace();
+			return stack;
+		}
 	}
 
 }

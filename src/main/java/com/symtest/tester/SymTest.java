@@ -318,6 +318,9 @@ public abstract class SymTest {
 		IEdge newEdge = null;
 		INode node = oldEdge.getTail();
 
+		if(node.getOutgoingEdgeList().size()<=1)
+			return null;
+
 		if (oldEdge.equals(node.getOutgoingEdgeList().get(0))) {
 			newEdge = node.getOutgoingEdgeList().get(1);
 		} else if (oldEdge.equals(node.getOutgoingEdgeList().get(1))) {

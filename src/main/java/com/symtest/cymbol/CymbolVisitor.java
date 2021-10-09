@@ -1,4 +1,4 @@
-// Generated from cymbol/Cymbol.g4 by ANTLR 4.7.1
+// Generated from cymbol/Cymbol.g4 by ANTLR 4.9.2
 
 package com.symtest.cymbol;
 
@@ -174,6 +174,13 @@ public interface CymbolVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitInt(CymbolParser.IntContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code BooleanInput}
+	 * labeled alternative in {@link CymbolParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBooleanInput(CymbolParser.BooleanInputContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code Input}
 	 * labeled alternative in {@link CymbolParser#expr}.
 	 * @param ctx the parse tree
@@ -209,6 +216,13 @@ public interface CymbolVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitOrExp(CymbolParser.OrExpContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code Bool}
+	 * labeled alternative in {@link CymbolParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBool(CymbolParser.BoolContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code Equal}
 	 * labeled alternative in {@link CymbolParser#expr}.
 	 * @param ctx the parse tree
@@ -222,6 +236,13 @@ public interface CymbolVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitGreaterThan(CymbolParser.GreaterThanContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Real}
+	 * labeled alternative in {@link CymbolParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReal(CymbolParser.RealContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CymbolParser#exprList}.
 	 * @param ctx the parse tree

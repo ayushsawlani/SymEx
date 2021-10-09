@@ -1,6 +1,6 @@
 // Based on https://github.com/svzdvd/antlr4-gradle-example/blob/master/build.gradle
 plugins {
-    id 'java'
+    id 'java-library'
     id 'antlr'
     id 'application'
 }
@@ -14,10 +14,15 @@ repositories {
 }
 
 dependencies {
-    antlr "org.antlr:antlr4:4.7.1"
-    compile "org.antlr:antlr4-runtime:4.7.1"
-    testCompile "junit:junit:4.12"
+    antlr "org.antlr:antlr4:4.9.2"
+    api "org.antlr:antlr4-runtime:4.9.2"
+    testImplementation "junit:junit:4.12"
 }
+
+
+
+
+
 
 generateGrammarSource {
     maxHeapSize = "64m"
@@ -53,6 +58,6 @@ task fatJar(type: Jar) {
                 'Main-Class': 'com.symtest.frontend.Driver'
         )
     }
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }

@@ -1,4 +1,4 @@
-// Generated from cymbol/Cymbol.g4 by ANTLR 4.7.1
+// Generated from cymbol/Cymbol.g4 by ANTLR 4.9.2
 
 package com.symtest.cymbol;
 
@@ -187,6 +187,13 @@ public class CymbolBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitBooleanInput(CymbolParser.BooleanInputContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitInput(CymbolParser.InputContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -222,6 +229,13 @@ public class CymbolBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitBool(CymbolParser.BoolContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitEqual(CymbolParser.EqualContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -230,6 +244,13 @@ public class CymbolBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitGreaterThan(CymbolParser.GreaterThanContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitReal(CymbolParser.RealContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

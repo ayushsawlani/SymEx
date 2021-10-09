@@ -151,7 +151,7 @@ public class Z3Solver implements ISolver {
 						tokens.get(i + 3));
 				}
 				
-				//System.out.println(var+"-->"+value);
+				System.out.println(var+"-->"+value);
 				
 				map.put(var, value);
 			}

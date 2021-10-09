@@ -53,7 +53,7 @@ import com.symtest.expression.Type;
 import com.symtest.expression.Variable;
 import com.symtest.statement.IStatement;
 import com.symtest.statement.Statement;
-import com.symtest.tester.SymTest_basic;
+import com.symtest.tester.*;
 import com.symtest.tester.TestSequence;
 
 
@@ -122,7 +122,7 @@ public class CFGVisitor extends CymbolBaseVisitor<Value> {
 
 		// TODO Add more documentation about what's going on here.
 		// TODO Move this out of here into Driver
-		SymTest_basic st = new SymTest_basic(mCFG, mCreator.targets);
+		SymTest st = new SymTest_RL(mCFG, mCreator.targets);
 		TestSequence seq = st.generateTestSequence();
 		Map<IIdentifier, List<Object>> testseq = seq.getTestSequence();
 		System.out.println("Test Seq: " + testseq);
