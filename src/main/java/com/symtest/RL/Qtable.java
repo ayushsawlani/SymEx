@@ -30,6 +30,11 @@ public class Qtable{
     {
         return this.table.containsKey(s);
     }
+
+    public HashMap <State, Double> GetTable()
+    {
+        return table;
+    }
     public double GetReward(IPath path, Set <IEdge> intargets, IEdge startedge)
     {
         Set <IEdge> targets = new HashSet <IEdge> (intargets);
@@ -49,7 +54,7 @@ public class Qtable{
                 pen++;
             }
         }
-        net_rew = rew *10 - pen; 
+        net_rew = rew *10 - 2*pen; 
         return net_rew;
     }
     public void main(String[] args) throws Exception

@@ -1,6 +1,6 @@
 // Based on https://github.com/svzdvd/antlr4-gradle-example/blob/master/build.gradle
 plugins {
-    id 'java-library'
+    id 'java'
     id 'antlr'
     id 'application'
 }
@@ -18,11 +18,6 @@ dependencies {
     api "org.antlr:antlr4-runtime:4.9.2"
     testImplementation "junit:junit:4.12"
 }
-
-
-
-
-
 
 generateGrammarSource {
     maxHeapSize = "64m"

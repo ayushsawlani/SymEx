@@ -165,7 +165,13 @@ public class SymTest_RL extends SymTest {
 					logger.finer("Complete path: " + completePath);
 				}
 
-				backtrack(stack);
+				Stack <Pair <IEdge, Boolean>> mystack = new Stack<>();
+				for(IEdge e: prefix)
+				{
+					mystack.push(new Pair <IEdge, Boolean>(e, false));
+				}
+				mystack.push(new Pair <IEdge, Boolean> (stack.peek().getFirst(), false));
+				stack = backtrack(mystack);
 				if (!stack.isEmpty()) {
 					// Add the updated edge
 					if (stack.peek().getFirst().getTail().getId() == prefix.get(prefix.size()-1).getHead().getId()) {
@@ -207,6 +213,7 @@ public class SymTest_RL extends SymTest {
 		try
 		{
 			System.out.println("inside Backtrack\n");
+			
 			/*
 			if (!stack.isEmpty()) {
 				Pair<IEdge, Boolean> topmostPair = stack.pop();
@@ -228,14 +235,19 @@ public class SymTest_RL extends SymTest {
 				return stack;
 			//*/
 			
+			//System.out.println(stack.toString());
+
 			List <Pair <IEdge, Boolean>> computed_path_util = new ArrayList<Pair <IEdge, Boolean>> (stack);
-			Collections.reverse(computed_path_util);
+			//Collections.reverse(computed_path_util);
 			List <IEdge> computed_path = new ArrayList <IEdge>();
 			for (Pair <IEdge, Boolean> it: computed_path_util)
 			{
 				computed_path.add(it.getFirst());
 			}
 				
+			//System.out.println(computed_path.toString());
+
+
 			int ptr2 = computed_path.size() - 1; 
 			int num_edges = State.Get_num_edges(); 
 			int ptr1 = Math.max(ptr2 - num_edges + 1, 0);
@@ -250,7 +262,12 @@ public class SymTest_RL extends SymTest {
 				IPath state_path = new Path(mGraph);
 				state_path.setPath(state_edges);
 				
+				//System.out.println(ptr1);
 				State curr_state = new State(state_path);
+				//System.out.println(ptr2);
+				//System.out.println(curr_state.hashCode());
+				//System.out.println(curr_state.Getpath().getPath().toString());
+
 				if(my_table.CheckState(curr_state)==false)
 				{
 					my_table.AddState(curr_state, 0.0);
@@ -260,12 +277,17 @@ public class SymTest_RL extends SymTest {
 				if(ptr1>0)
 					ptr1--;
 			}
+
+
 			ptr2 = computed_path.size() - 1; 
 			num_edges = State.Get_num_edges(); 
 			ptr1 = Math.max(ptr2 - num_edges + 1, 0);
 			double max_reward = -100000; 
 			int back_track_point = -1; 
 			
+			//System.out.println("\n" + my_table.GetTable().size() + "\n");
+
+
 	
 			while(ptr2>=0)
 			{
@@ -280,6 +302,12 @@ public class SymTest_RL extends SymTest {
 				
 	
 				State curr_state = new State(state_path);
+				//System.out.println(ptr2);
+				//System.out.println(curr_state.hashCode());
+				//System.out.println(Boolean.toString(my_table.CheckState(curr_state))+"\n");
+				//System.out.println(ptr1);
+				//System.out.println(curr_state.Getpath().getPath().toString());
+				
 				if((max_reward < my_table.GetValue(curr_state))&&(getOtherEdge(computed_path.get(ptr2))!=null))
 				{
 					System.out.println(my_table.GetValue(curr_state));
@@ -290,19 +318,23 @@ public class SymTest_RL extends SymTest {
 				if(ptr1>0)
 					ptr1 = ptr1 - 1;
 
-				double coin_toss = Math.random();
 				
-				if(coin_toss < 0.30)
+			}
+			double coin_toss = Math.random();
+			if(coin_toss < 0.30)
+			{
+				while(true)
 				{
-					while(true)
-					{
-						int explore_index = (int)(Math.random()*(computed_path.size()-1));
-						back_track_point = explore_index; 
-						if(getOtherEdge(computed_path.get(explore_index))!=null)
-							break;
-					}
+					int explore_index = (int)(Math.random()*(computed_path.size()));
+					
+					if(explore_index == computed_path.size())
+						explore_index--; 
+				
+					back_track_point = explore_index; 
+					if(getOtherEdge(computed_path.get(explore_index))!=null)
+						break;
 				}
-			}			
+			}
 			// policy update
 			//0.) compute reward from path after BTP. R1
 			//0.5) Make a local copy of targets and use them to create Rewards. 
@@ -314,8 +346,8 @@ public class SymTest_RL extends SymTest {
 			//6.) Update Qtable as R, R/2^r, R/2^2r and so on......
 			
 			//prefix_path, deleted_path, added_path. 
-			System.out.println(back_track_point);
-			System.out.println(computed_path.toString());
+			//System.out.println(back_track_point);
+			//System.out.println(computed_path.toString());
 
 			IPath prefix_path = new Path(mGraph); 
 			IPath deleted_path = new Path (mGraph);
@@ -331,7 +363,8 @@ public class SymTest_RL extends SymTest {
 			{
 				e.printStackTrace();
 			}
-			curr_targets.removeAll(deleted_path.getPath());
+
+			curr_targets.removeAll(prefix_path.getPath());
 
 			FindCFPathAlgorithm algorithm = new FindCFPathAlgorithm( this.mGraph, 
 			curr_targets, this.mConvertor.getGraphNode(this.mTarget));
@@ -352,18 +385,18 @@ public class SymTest_RL extends SymTest {
 			
 			IPath newpath = new Path(mGraph); 
 			newpath.setPath(updated_path_util);
+
 			List <ICFEdge> cfpath = convertPathEdgesToCFGEdges(newpath);
 
-			int satisfiableIndex = SymTestUtil
-							.getLongestSatisfiablePrefix(cfpath, mCFG);
+			int satisfiableIndex = SymTestUtil.getLongestSatisfiablePrefix(cfpath, mCFG);
 			
 			List<IEdge> satisfiablePrefix = new ArrayList <IEdge> (updated_path_util.subList(back_track_point, satisfiableIndex+1));
 			
 			added_path.setPath(satisfiablePrefix);
 
-			System.out.println(prefix_path.toString());			
-			System.out.println(deleted_path.toString());			
-			System.out.println(added_path.toString());
+			//System.out.println(prefix_path.toString());			
+			//System.out.println(deleted_path.toString());			
+			//System.out.println(added_path.toString());
 
 
 			
@@ -410,11 +443,12 @@ public class SymTest_RL extends SymTest {
 			}
 			stack.push(new Pair <IEdge, Boolean> (computed_path.get(back_track_point), false));
 			//*/
+			//System.out.println(stack);
 			return stack;
 		}
 		catch(Exception e)
 		{
-			System.out.println("Backtrack exception");	
+			//System.out.println("Backtrack exception");	
 			stack.clear();
 			e.printStackTrace();
 			return stack;

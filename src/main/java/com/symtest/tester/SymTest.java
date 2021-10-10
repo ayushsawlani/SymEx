@@ -243,11 +243,13 @@ public abstract class SymTest {
 	 * @param path that hets added newly
 	 */
 	protected void updatestack(Stack<Pair<IEdge, Boolean>> stack, List<IEdge> path) {
-		for (IEdge e : path) {
+		for (IEdge e : path.subList(0, path.size())) {
 			// Push only decision node's edges
 			if (this.mConvertor.getCFEdge(e).getTail() instanceof ICFGDecisionNode) {
 				stack.push(new Pair<IEdge, Boolean>(e, true));
 			}
+			
+			//stack.push(new Pair <IEdge, Boolean> (e, true));
 		}
 
 	}

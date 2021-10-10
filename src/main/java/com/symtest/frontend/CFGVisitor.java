@@ -54,7 +54,6 @@ import com.symtest.expression.Variable;
 import com.symtest.statement.IStatement;
 import com.symtest.statement.Statement;
 import com.symtest.tester.*;
-import com.symtest.tester.TestSequence;
 
 
 public class CFGVisitor extends CymbolBaseVisitor<Value> {

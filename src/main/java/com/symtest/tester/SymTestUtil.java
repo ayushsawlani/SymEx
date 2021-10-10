@@ -66,17 +66,18 @@ public class SymTestUtil {
 
 	private static int binsearch(List<ICFEdge> path, int start, int end,
 			ICFG cfg) throws Exception {
-		if (start >= (end)) {
+		if (start >= (end-1)) {
 			return start;
 		}
-		int mid = (start + end + 1) / 2;
-		if (isSAT(path.subList(0, (mid)), cfg))
+		int mid = (start + end) / 2;
+		if (isSAT(path.subList(0, (mid + 1)), cfg))
 			return binsearch(path, mid, end, cfg);
 		else
-			return binsearch(path, start, mid-1, cfg);
+			return binsearch(path, start, mid, cfg);
 
 	}
 
+	
 	private static boolean isSAT(List<ICFEdge> path, ICFG cfg) throws Exception {
 //		System.out.println("@@@UTIL Bin candidate getSET");
 		SET set = getSET(path, cfg);
