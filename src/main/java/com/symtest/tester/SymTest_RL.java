@@ -249,7 +249,7 @@ public class SymTest_RL extends SymTest {
 
 
 			int ptr2 = computed_path.size() - 1; 
-			int num_edges = State.Get_num_edges(); 
+			int num_edges = State.Get_num_edges();//state is a path of k edges 
 			int ptr1 = Math.max(ptr2 - num_edges + 1, 0);
 			while(ptr2>=0)
 			{
@@ -321,20 +321,23 @@ public class SymTest_RL extends SymTest {
 				
 			}
 			double coin_toss = Math.random();
-			if(coin_toss < 0.30)
+			if(coin_toss < 0.30) // 70% go with greedy way, 30% 
 			{
 				while(true)
 				{
-					int explore_index = (int)(Math.random()*(computed_path.size()));
+					int explore_index = (int)(Math.random()*(computed_path.size() - 1));
 					
+					/*
 					if(explore_index == computed_path.size())
 						explore_index--; 
-				
+					*/
+
 					back_track_point = explore_index; 
 					if(getOtherEdge(computed_path.get(explore_index))!=null)
 						break;
 				}
 			}
+
 			// policy update
 			//0.) compute reward from path after BTP. R1
 			//0.5) Make a local copy of targets and use them to create Rewards. 
@@ -441,7 +444,7 @@ public class SymTest_RL extends SymTest {
 			{
 				stack.push(new Pair <IEdge, Boolean> (computed_path.get(i), false));
 			}
-			stack.push(new Pair <IEdge, Boolean> (computed_path.get(back_track_point), false));
+			stack.push(new Pair <IEdge, Boolean> (updated_path_util.get(back_track_point), false));
 			//*/
 			//System.out.println(stack);
 			return stack;

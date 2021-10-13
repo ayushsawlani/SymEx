@@ -1,5 +1,5 @@
-(declare-fun symvar1201147419 () Int)
-(assert ( and true ( > symvar1201147419 50)))
+(declare-fun symvar180043099 () Int)
+(assert ( and ( and ( and ( and ( and true ( > symvar180043099 50)) ( not ( and ( > ( + symvar180043099 2) 100) ( < ( + symvar180043099 2) 180)))) ( not ( and ( > ( + symvar180043099 2) 60) ( < ( + symvar180043099 2) 70)))) ( > ( + symvar180043099 2) 65)) ( not ( and ( < ( + symvar180043099 1) 50) ( > ( + symvar180043099 1) 44)))))
 (check-sat)
 (get-model)
 (exit)
