@@ -13,7 +13,6 @@ void main(){
 		}
 		}
 		if((x<50)&&(x>44)){x = x + 65 ;}
-		else{ x = x + 20 ;}
-		
+		else{ x = x + 20 ;}	
 	}
 }

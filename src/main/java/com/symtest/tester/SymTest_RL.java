@@ -38,7 +38,8 @@ import com.symtest.tester.SymTest;
 
 public class SymTest_RL extends SymTest {
 
-	private static final int MAXIMUM_ITERATIONS = 5;
+	private int edges_in_state = 1; 
+	private static final int MAXIMUM_ITERATIONS = 100;
 	private Qtable my_table = new Qtable();
 	public SymTest_RL(ICFG cfg, Set<ICFEdge> targets) {
 		super(cfg, targets);
@@ -236,7 +237,6 @@ public class SymTest_RL extends SymTest {
 			//*/
 			
 			//System.out.println(stack.toString());
-
 			List <Pair <IEdge, Boolean>> computed_path_util = new ArrayList<Pair <IEdge, Boolean>> (stack);
 			//Collections.reverse(computed_path_util);
 			List <IEdge> computed_path = new ArrayList <IEdge>();
@@ -245,11 +245,12 @@ public class SymTest_RL extends SymTest {
 				computed_path.add(it.getFirst());
 			}
 				
-			//System.out.println(computed_path.toString());
-
+			// System.out.println(computed_path.toString());
+			// Create and add states. 
+			// inputs -> computed path, 
 
 			int ptr2 = computed_path.size() - 1; 
-			int num_edges = State.Get_num_edges();//state is a path of k edges 
+			int num_edges = edges_in_state;
 			int ptr1 = Math.max(ptr2 - num_edges + 1, 0);
 			while(ptr2>=0)
 			{
@@ -279,14 +280,13 @@ public class SymTest_RL extends SymTest {
 			}
 
 
+			// Find backtrack point(computed path)
 			ptr2 = computed_path.size() - 1; 
-			num_edges = State.Get_num_edges(); 
 			ptr1 = Math.max(ptr2 - num_edges + 1, 0);
 			double max_reward = -100000; 
 			int back_track_point = -1; 
 			
 			//System.out.println("\n" + my_table.GetTable().size() + "\n");
-
 
 	
 			while(ptr2>=0)
@@ -377,23 +377,23 @@ public class SymTest_RL extends SymTest {
 			
 			
 			IEdge break_edge = getOtherEdge(computed_path.get(back_track_point));
-			List <IEdge> updated_path_util = new ArrayList <IEdge> (computed_path.subList(0, back_track_point)); 
+			computed_path = new ArrayList <IEdge> (computed_path.subList(0, back_track_point)); 
 			
-			updated_path_util.add(break_edge);
+			computed_path.add(break_edge);
 			
 			for(IEdge edge: acyclic_path.getPath())
 			{
-				updated_path_util.add(edge); 
+				computed_path.add(edge); 
 			}
 			
 			IPath newpath = new Path(mGraph); 
-			newpath.setPath(updated_path_util);
+			newpath.setPath(computed_path);
 
 			List <ICFEdge> cfpath = convertPathEdgesToCFGEdges(newpath);
 
 			int satisfiableIndex = SymTestUtil.getLongestSatisfiablePrefix(cfpath, mCFG);
 			
-			List<IEdge> satisfiablePrefix = new ArrayList <IEdge> (updated_path_util.subList(back_track_point, satisfiableIndex+1));
+			List<IEdge> satisfiablePrefix = new ArrayList <IEdge> (computed_path.subList(back_track_point, satisfiableIndex+1));
 			
 			added_path.setPath(satisfiablePrefix);
 
@@ -414,7 +414,7 @@ public class SymTest_RL extends SymTest {
 			double curr_factor = 1; 
 			
 			ptr2 = back_track_point-1; 
-			num_edges = State.Get_num_edges(); 
+			num_edges = edges_in_state;
 			ptr1 = Math.max(ptr2 - num_edges + 1, 0);
 			while(ptr2>=0)
 			{
@@ -444,7 +444,7 @@ public class SymTest_RL extends SymTest {
 			{
 				stack.push(new Pair <IEdge, Boolean> (computed_path.get(i), false));
 			}
-			stack.push(new Pair <IEdge, Boolean> (updated_path_util.get(back_track_point), false));
+			stack.push(new Pair <IEdge, Boolean> (computed_path.get(back_track_point), false));
 			//*/
 			//System.out.println(stack);
 			return stack;
