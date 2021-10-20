@@ -4,7 +4,6 @@ import com.symtest.mygraph.*;
 import java.util.*;
 public class State{
     private IPath mypath;
-    private static int num_edges_in_state = 1;
     public State(IPath inpath)
     {
         this.mypath = new Path(inpath.getGraph());
@@ -13,10 +12,6 @@ public class State{
     public IPath Getpath()
     {
         return this.mypath;
-    }
-    public static int Get_num_edges()
-    {
-        return num_edges_in_state;
     }
 
     @Override

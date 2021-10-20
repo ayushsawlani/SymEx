@@ -121,7 +121,7 @@ public class CFGVisitor extends CymbolBaseVisitor<Value> {
 
 		// TODO Add more documentation about what's going on here.
 		// TODO Move this out of here into Driver
-		SymTest st = new SymTest_basic(mCFG, mCreator.targets);
+		SymTest st = new SymTest_RL(mCFG, mCreator.targets);
 		TestSequence seq = st.generateTestSequence();
 		Map<IIdentifier, List<Object>> testseq = seq.getTestSequence();
 		System.out.println("Test Seq: " + testseq);

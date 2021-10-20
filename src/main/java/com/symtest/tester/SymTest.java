@@ -35,7 +35,7 @@ public abstract class SymTest {
 
 	abstract Stack<Pair<IEdge, Boolean>> backtrack(Stack<Pair<IEdge, Boolean>> stck);
 
-	protected static final int MAXIMUM_ITERATIONS = 5;
+	protected static final int MAXIMUM_ITERATIONS = 100;
 	public ICFG mCFG;
 	public CFGToGraphConvertor mConvertor;
 	public IGraph mGraph;
@@ -316,7 +316,7 @@ public abstract class SymTest {
 			return stack;
 	}
 */
-	protected IEdge getOtherEdge(IEdge oldEdge) {
+	public IEdge getOtherEdge(IEdge oldEdge) {
 		IEdge newEdge = null;
 		INode node = oldEdge.getTail();
 
