@@ -30,7 +30,10 @@ public class Qtable{
     {
         return this.table.containsKey(s);
     }
-
+    public HashMap <State, Double> get_table()
+    {
+        return this.table;
+    }
     public HashMap <State, Double> GetTable()
     {
         return table;

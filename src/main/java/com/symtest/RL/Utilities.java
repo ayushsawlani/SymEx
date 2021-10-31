@@ -46,6 +46,10 @@ public class Utilities{
             {
                 my_table.AddState(curr_state, 0.0);
             }
+            else
+            {
+                System.out.println("State present");
+            }
             
             ptr2--;
             if(ptr1>0)
@@ -85,6 +89,7 @@ public class Utilities{
             if((max_reward < my_table.GetValue(curr_state))&&(mytest.getOtherEdge(computed_path.get(ptr2))!=null))
             {
                 System.out.println(my_table.GetValue(curr_state));
+                System.out.println("Good Q value");
                 max_reward = my_table.GetValue(curr_state);
                 back_track_point = ptr2; 
             }
@@ -119,7 +124,14 @@ public class Utilities{
             IPath prefix_path = new Path(mGraph); 
 			IPath deleted_path = new Path (mGraph);
 			IPath added_path = new Path(mGraph);
-
+			IEdge backEdge = null;
+            for(int i=0; i<computed_path.size(); i++)
+            {
+                if(computed_path.get(i).getTail().getId() == "While")
+                {
+                    backEdge = computed_path.get(i);
+                }
+            }
 			prefix_path.setPath(new ArrayList <IEdge> (computed_path.subList(0, back_track_point)));
 			deleted_path.setPath(new ArrayList <IEdge> (computed_path.subList(back_track_point, computed_path.size())));
 			Set<IEdge> curr_targets = new HashSet <IEdge>();
@@ -167,9 +179,9 @@ public class Utilities{
 
 
 			
-			IEdge startEdge = mytest.mConvertor.getGraphEdge(mCFG.getStartNode().getOutgoingEdgeList().get(0));
-			double Rew1 = my_table.GetReward(deleted_path, curr_targets, startEdge);
-			double Rew2 = my_table.GetReward(added_path, curr_targets, startEdge);
+			
+            double Rew1 = my_table.GetReward(deleted_path, curr_targets, backEdge);
+			double Rew2 = my_table.GetReward(added_path, curr_targets, backEdge);
 
 			double net_rew = Rew2 - Rew1;
 
@@ -192,13 +204,14 @@ public class Utilities{
 				State curr_state = new State(state_path);
 				
 				my_table.UpdateState(curr_state, my_table.GetValue(curr_state) +  net_rew*curr_factor);
-
+                //System.out.println(my_table.GetValue(curr_state));
+                //System.out.println(my_table.get_table().size());
 				ptr2--;
 				if(ptr1>0)
 					ptr1--;
 
 				curr_factor = curr_factor * factor;
-			}
+			} 
         }
         catch(Exception e)
         {

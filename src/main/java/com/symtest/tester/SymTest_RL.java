@@ -39,7 +39,7 @@ import com.symtest.tester.SymTest;
 public class SymTest_RL extends SymTest {
 
 	private double explore_probability = 0.3;
-	private int edges_in_state = 3; 
+	private int edges_in_state = 1; 
 	private Qtable my_table = new Qtable();
 	public SymTest_RL(ICFG cfg, Set<ICFEdge> targets) {
 		super(cfg, targets);
