@@ -88,8 +88,8 @@ public class Utilities{
             
             if((max_reward < my_table.GetValue(curr_state))&&(mytest.getOtherEdge(computed_path.get(ptr2))!=null))
             {
-                System.out.println(my_table.GetValue(curr_state));
-                System.out.println("Good Q value");
+               // System.out.println(my_table.GetValue(curr_state));
+                //System.out.println("Good Q value");
                 max_reward = my_table.GetValue(curr_state);
                 back_track_point = ptr2; 
             }
@@ -161,7 +161,6 @@ public class Utilities{
 			{
 				computed_path.add(edge); 
 			}
-			
 			IPath newpath = new Path(mGraph); 
 			newpath.setPath(computed_path);
 
@@ -189,15 +188,22 @@ public class Utilities{
 			double factor = Math.pow(2, -decay_factor); 
 			double curr_factor = 1; 
 			
-			int ptr2 = back_track_point-1; 
+			int ptr2 = back_track_point; 
 			int num_edges = edges_in_state;
 			int ptr1 = Math.max(ptr2 - num_edges + 1, 0);
-			while(ptr2>=0)
+   
+            while(ptr2>=0)
 			{
 				//sublist of edges. 
 				// use that to create path
 				//use that to create a state. 
 				List <IEdge> state_edges = new ArrayList <IEdge> (computed_path.subList(ptr1, ptr2+1));
+                
+                if(ptr2 == back_track_point)
+                {
+                    state_edges.set(num_edges-1, mytest.getOtherEdge(break_edge));
+                }
+
 				IPath state_path = new Path(mGraph);
 				state_path.setPath(state_edges);
 				

@@ -245,16 +245,16 @@ public class SymTest_RL extends SymTest {
 				computed_path.add(it.getFirst());
 			}
 				
-			// System.out.println(computed_path.toString());
-			// Create and add states. 
-			// inputs -> computed path, 
+			System.out.println(stack);
+			
 			Utilities my_util = new Utilities(edges_in_state, mGraph, mCFG, this);
 			my_util.initialize_table(computed_path, my_table);
 			int backtrackpoint = my_util.find_backtrack_point(computed_path, my_table, explore_probability);
 			my_util.update_policy(computed_path, my_table, backtrackpoint);
 			my_util.stack_update(computed_path, backtrackpoint, stack, backtrackpoint);
-			//*/
-			//System.out.println(stack);
+			
+			System.out.println(stack);
+			
 			return stack;
 		}
 		
