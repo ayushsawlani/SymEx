@@ -57,6 +57,9 @@ public class Qtable{
                 pen++;
             }
         }
+        if(startedge == null)
+            pen = 0;
+        
         net_rew = rew *10 - 2*pen; 
         return net_rew;
     }

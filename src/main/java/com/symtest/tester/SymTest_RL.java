@@ -32,14 +32,13 @@ import com.symtest.set.SET;
 import com.symtest.set.SETBasicBlockNode;
 import com.symtest.set.SETNode;
 import com.symtest.utilities.Pair;
-import com.ibm.icu.impl.CalendarAstronomer.Ecliptic;
 import com.symtest.RL.*;
 import com.symtest.tester.SymTest;
 
 public class SymTest_RL extends SymTest {
 
-	private double explore_probability = 0.3;
-	private int edges_in_state = 1; 
+	private double explore_probability = 0.2;
+	private int edges_in_state = 3; 
 	private Qtable my_table = new Qtable();
 	public SymTest_RL(ICFG cfg, Set<ICFEdge> targets) {
 		super(cfg, targets);
@@ -171,8 +170,11 @@ public class SymTest_RL extends SymTest {
 				{
 					mystack.push(new Pair <IEdge, Boolean>(e, false));
 				}
-				mystack.push(new Pair <IEdge, Boolean> (stack.peek().getFirst(), false));
+				if(mystack.peek().getFirst().getHead().getId().charAt(0) != 'D')
+					mystack.push(new Pair <IEdge, Boolean> (stack.peek().getFirst(), false));
+				//System.out.println(stack.toString());
 				stack = backtrack(mystack);
+				//System.out.println(stack.toString());
 				if (!stack.isEmpty()) {
 					// Add the updated edge
 					if (stack.peek().getFirst().getTail().getId() == prefix.get(prefix.size()-1).getHead().getId()) {
@@ -213,7 +215,7 @@ public class SymTest_RL extends SymTest {
 	{
 		try
 		{
-			System.out.println("inside Backtrack\n");
+			System.out.println("inside Backtrack");
 			
 			/*
 			if (!stack.isEmpty()) {

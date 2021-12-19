@@ -48,7 +48,7 @@ public class Utilities{
             }
             else
             {
-                System.out.println("State present");
+                //System.out.println("State present");
             }
             
             ptr2--;
@@ -102,6 +102,7 @@ public class Utilities{
         double coin_toss = Math.random();
         if(coin_toss < explore_probability) // 70% go with greedy way, 30% 
         {
+            System.out.println("Randomised picked");
             while(true)
             {
                 int explore_index = (int)(Math.random()*(computed_path.size() - 1));
@@ -116,6 +117,7 @@ public class Utilities{
                     break;
             }
         }
+        System.out.println(back_track_point);
         return back_track_point;
     }
     public void update_policy(List <IEdge> computed_path, Qtable my_table, int back_track_point)
@@ -127,7 +129,7 @@ public class Utilities{
 			IEdge backEdge = null;
             for(int i=0; i<computed_path.size(); i++)
             {
-                if(computed_path.get(i).getTail().getId() == "While")
+                if(computed_path.get(i).getTail().getId().equals("graph-WHILE"))
                 {
                     backEdge = computed_path.get(i);
                 }
@@ -171,10 +173,28 @@ public class Utilities{
 			List<IEdge> satisfiablePrefix = new ArrayList <IEdge> (computed_path.subList(back_track_point, satisfiableIndex+1));
 			
 			added_path.setPath(satisfiablePrefix);
-
-			//System.out.println(prefix_path.toString());			
-			//System.out.println(deleted_path.toString());			
-			//System.out.println(added_path.toString());
+            for(int i=0; i<deleted_path.getPath().size(); i++)
+            {
+                if(deleted_path.getPath().get(i).getTail().getId().equals("graph-WHILE"))
+                {
+                    backEdge = deleted_path.getPath().get(i);
+                }
+            }
+            for(int i=0; i<added_path.getPath().size(); i++)
+            {
+                //System.out.println(added_path.getPath().get(i).getTail().getId());
+                if(added_path.getPath().get(i).getTail().getId().equals("graph-WHILE"))
+                {
+                    backEdge = added_path.getPath().get(i);
+                }
+            }
+            if(backEdge != null)
+                System.out.println(backEdge.toString());
+            else
+                System.out.println("NULL back Edge");
+			System.out.println(prefix_path.toString());			
+			System.out.println(deleted_path.toString());			
+			System.out.println(added_path.toString());
 
 
 			
@@ -218,6 +238,11 @@ public class Utilities{
 
 				curr_factor = curr_factor * factor;
 			} 
+            for(State name: my_table.get_table().keySet())
+            {
+                System.out.println(name.Getpath().toString());
+                System.out.println(my_table.GetValue(name));
+            }
         }
         catch(Exception e)
         {
