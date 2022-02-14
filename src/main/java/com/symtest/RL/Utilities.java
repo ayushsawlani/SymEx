@@ -1,5 +1,11 @@
 package com.symtest.RL;
 import java.util.*;
+import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.PrintWriter;
+import java.nio.Buffer;
+
 import com.symtest.utilities.Pair;
 import com.symtest.graph.*;
 import com.symtest.mygraph.*;
@@ -13,8 +19,21 @@ public class Utilities{
     private IGraph mGraph;
     private ICFG mCFG;
     private SymTest mytest;
+    private FileWriter myfile;
+    
+    
     public Utilities(int iedges, IGraph imGraph, ICFG imcfg, SymTest imytest)
     {
+        try
+        {
+            //myfile = new FileWriter("/mnt/d/Ayush/Ayush/SymEx/tabledata.txt", true);
+        } 
+        catch (Exception e) 
+        {
+            //exception handling left as an exercise for the reader
+            //System.out.println("cannot initialize file");
+        }
+        
         edges_in_state = iedges;
         mGraph = imGraph;
         mCFG = imcfg;
@@ -122,6 +141,7 @@ public class Utilities{
     }
     public void update_policy(List <IEdge> computed_path, Qtable my_table, int back_track_point)
     {
+        
         try{
             IPath prefix_path = new Path(mGraph); 
 			IPath deleted_path = new Path (mGraph);
@@ -135,7 +155,7 @@ public class Utilities{
                 }
             }
 			prefix_path.setPath(new ArrayList <IEdge> (computed_path.subList(0, back_track_point)));
-			deleted_path.setPath(new ArrayList <IEdge> (computed_path.subList(back_track_point, computed_path.size())));
+			deleted_path.setPath(new ArrayList <IEdge> (computed_path.subList(back_track_point, computed_path.size()-1)));
 			Set<IEdge> curr_targets = new HashSet <IEdge>();
 			try{
 				curr_targets = mytest.convertTargetEdgesToGraphEdges(mytest.mTargets); 
@@ -192,6 +212,7 @@ public class Utilities{
                 System.out.println(backEdge.toString());
             else
                 System.out.println("NULL back Edge");
+            
 			System.out.println(prefix_path.toString());			
 			System.out.println(deleted_path.toString());			
 			System.out.println(added_path.toString());
@@ -238,11 +259,17 @@ public class Utilities{
 
 				curr_factor = curr_factor * factor;
 			} 
+            /*
             for(State name: my_table.get_table().keySet())
             {
-                System.out.println(name.Getpath().toString());
-                System.out.println(my_table.GetValue(name));
+                //System.out.println(name.Getpath().toString());
+                //System.out.println(my_table.GetValue(name));
+                String s = name.Getpath().toString() + ": "  + my_table.GetValue(name) + "\n";
+                //myfile.append(s);
             }
+            */
+            //myfile.append("\nValues updated\n\n");
+            //myfile.close();
         }
         catch(Exception e)
         {

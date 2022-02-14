@@ -34,6 +34,8 @@ import com.symtest.utilities.Pair;
 import com.symtest.tester.SymTest;
 
 public class SymTest_basic extends SymTest {
+	
+	private int n_backtracks = 0;
 
 	private static final int MAXIMUM_ITERATIONS = 5;
 		
@@ -205,6 +207,8 @@ public class SymTest_basic extends SymTest {
 
 	public Stack<Pair<IEdge, Boolean>> backtrack(
 			Stack<Pair<IEdge, Boolean>> stack) {
+				n_backtracks++;
+				System.out.println(n_backtracks);
 		if (!stack.isEmpty()) {
 			Pair<IEdge, Boolean> topmostPair = stack.pop();
 			if (stack.isEmpty()) {
@@ -223,6 +227,7 @@ public class SymTest_basic extends SymTest {
 				return backtrack(stack);
 		} else
 			return stack;
+		
 	}
 
 }

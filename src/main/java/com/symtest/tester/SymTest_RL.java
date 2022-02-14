@@ -37,8 +37,10 @@ import com.symtest.tester.SymTest;
 
 public class SymTest_RL extends SymTest {
 
-	private double explore_probability = 0.2;
-	private int edges_in_state = 3; 
+	private double explore_probability = 0.5;
+	private double probability_decay = 0.99998;
+	private int edges_in_state = 3;
+	private int n_backtracks = 0; 
 	private Qtable my_table = new Qtable();
 	public SymTest_RL(ICFG cfg, Set<ICFEdge> targets) {
 		super(cfg, targets);
@@ -49,8 +51,14 @@ public class SymTest_RL extends SymTest {
 		super(cfg,targets,heuristics);
 	}
 
+	public SymTest_RL(ICFG cfg, Set<ICFEdge> targets, Set<ApplyHeuristics> heuristics, Qtable in_table) {
+		super(cfg,targets,heuristics);
+		my_table = in_table;
+	}
+	
 	
 	public TestSequence generateTestSequence() {
+		n_backtracks = 0;
 		TestSequence testseq = null;
 		try {
 			
@@ -247,7 +255,7 @@ public class SymTest_RL extends SymTest {
 				computed_path.add(it.getFirst());
 			}
 				
-			System.out.println(stack);
+			System.out.println("input stack " + stack);
 			
 			Utilities my_util = new Utilities(edges_in_state, mGraph, mCFG, this);
 			my_util.initialize_table(computed_path, my_table);
@@ -255,7 +263,13 @@ public class SymTest_RL extends SymTest {
 			my_util.update_policy(computed_path, my_table, backtrackpoint);
 			my_util.stack_update(computed_path, backtrackpoint, stack, backtrackpoint);
 			
-			System.out.println(stack);
+			System.out.println("output stack " + stack);
+			n_backtracks++;
+			System.out.println("backtrack number: " + n_backtracks);
+			explore_probability = explore_probability * probability_decay;
+			
+			if(explore_probability<0.2)
+				explore_probability = 0.2;
 			
 			return stack;
 		}
