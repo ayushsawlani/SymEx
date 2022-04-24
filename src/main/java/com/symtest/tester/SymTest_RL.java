@@ -55,7 +55,11 @@ public class SymTest_RL extends SymTest {
 		super(cfg,targets,heuristics);
 		my_table = in_table;
 	}
-	
+
+	public void UpdateTargets(Set <ICFEdge> ntargets)
+	{
+		mTargets = new HashSet<>(ntargets);
+	}
 	
 	public TestSequence generateTestSequence() {
 		n_backtracks = 0;

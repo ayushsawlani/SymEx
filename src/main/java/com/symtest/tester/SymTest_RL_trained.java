@@ -1,10 +1,14 @@
 package com.symtest.tester;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -59,12 +63,38 @@ public class SymTest_RL_trained extends SymTest_basic {
 		TestSequence testseq = null;
 		try {
 			
-                SymTest_RL st = new SymTest_RL(mCFG, mTargets, heuristics, my_table);
 
                 int train_iterations = 5;
-                while(train_iterations>0)
+				SymTest_RL st = new SymTest_RL(mCFG, mTargets, heuristics, my_table);
+
+				Set <ICFEdge> filtered = new HashSet <>(mCFG.getEdgeSet());
+
+				for(ICFEdge edge: mCFG.getEdgeSet())
+				{
+					if((edge.getTail().getId().equals("WHILE"))||(edge.getHead().getId().equals("WHILE")))
+					{
+						filtered.remove(edge);
+					}
+					if((edge.getTail().getId().equals("BEGIN"))||(edge.getHead().getId().equals("BEGIN")))
+					{
+						filtered.remove(edge);
+					}
+				}
+				
+				List <ICFEdge> list = new ArrayList <ICFEdge> (filtered);
+
+				//System.out.println(list);
+				while(train_iterations>0)
                 {
-                    st.generateTestSequence();
+
+					Collections.shuffle(list);
+//					System.out.println(list);
+					Set <ICFEdge> rTargets = new HashSet <ICFEdge> (list.subList(0, 2));
+					st.UpdateTargets(rTargets);
+
+					testseq = st.generateTestSequence();
+					
+                    System.out.println(testseq);
                     for(State name: my_table.get_table().keySet())
                     {
                         System.out.println(name.Getpath().toString());
@@ -72,11 +102,21 @@ public class SymTest_RL_trained extends SymTest_basic {
                         //String s = name.Getpath().toString() + ": "  + my_table.GetValue(name) + "\n";
                         //myfile.append(s);
                     }
-
+                    
                     train_iterations--;
                 }
 
+				st.UpdateTargets(mTargets);
+				Instant start = Instant.now();
+				
+				//your code
                 testseq = st.generateTestSequence();
+				
+				Instant end = Instant.now();
+				
+				Duration timeElapsed = Duration.between(start, end);
+				
+				System.out.println("Time taken: "+ timeElapsed.getNano()/(1e6) +" milliseconds");
 
 			
 			System.out.println("Unsatisfiable finally");
