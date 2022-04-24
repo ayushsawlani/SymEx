@@ -8,17 +8,15 @@ package com.symtest.frontend;
  * LINE_NO - COVERAGE_TYPE
  */
 
-import java.io.FileInputStream;
-import java.io.InputStream;
+import com.symtest.cymbol.CymbolLexer;
+import com.symtest.cymbol.CymbolParser;
 import java.util.logging.Logger;
-
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import com.symtest.cymbol.CymbolLexer;
-import com.symtest.cymbol.CymbolParser;;
+
 
 public class Driver {
 
@@ -59,12 +57,15 @@ public class Driver {
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		CymbolParser parser = new CymbolParser(tokens);
 		ParseTree tree = parser.file();
+		System.out.println(tree);
 		CFGVisitor visitor = new CFGVisitor(args[0] + ".target");
+		
 		// TIME - Symtest
 		startTime = System.nanoTime();
 		visitor.visit(tree);
 		endTime = System.nanoTime();
 		duration = (endTime - startTime) / 1000000.0;
 		System.out.println("\n---- TIME - Symtest : " + duration + "ms ----");
+		//*/
 	}
 }

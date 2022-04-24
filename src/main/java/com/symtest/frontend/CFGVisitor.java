@@ -20,6 +20,7 @@ package com.symtest.frontend;
  */
 
 import com.symtest.cfg.ICFG;
+import com.symtest.cfg.*;
 import com.symtest.cymbol.CymbolBaseVisitor;
 import com.symtest.cymbol.CymbolParser;
 import com.symtest.expression.AddExpression;
@@ -49,8 +50,8 @@ import com.symtest.tester.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.HashMap; 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -122,9 +123,24 @@ public class CFGVisitor extends CymbolBaseVisitor<Value> {
 		// TODO Add more documentation about what's going on here.
 		// TODO Move this out of here into Driver
 		SymTest st = new SymTest_RL_trained(mCFG, mCreator.targets);
-		TestSequence seq = st.generateTestSequence();
-		Map<IIdentifier, List<Object>> testseq = seq.getTestSequence();
-		System.out.println("Test Seq: " + testseq);
+		System.out.println("VisitFile called");
+		Set <ICFGDecisionNode> DNodeList = mCFG.getDecisionNodeSet();
+		Set <ICFGBasicBlockNode> BBNodeList = mCFG.getBasicBlockNodeSet();
+		Set <ICFEdge> Edgelist = mCFG.getEdgeSet();
+
+		//System.out.println(DNodeList);
+		for(ICFGDecisionNode node: DNodeList)
+		{
+			System.out.println(node.getId().toString() + " " + node.getCondition().toString());
+		}
+		for(ICFGBasicBlockNode node: BBNodeList)
+		{
+			System.out.println(node.getId().toString() + " " + node.getStatements().toString());
+		}
+
+		//TestSequence seq = st.generateTestSequence();
+		//Map<IIdentifier, List<Object>> testseq = seq.getTestSequence();
+		//System.out.println("Test Seq: " + testseq);
 
 		return null;
 	}
