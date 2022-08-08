@@ -5,6 +5,8 @@ SymTest is a test generation tool using symbolic testing and graph algorithms to
 ### Reference:
 [Chakrabarti, Sujit, and S. Ramesh. "Symtest: A framework for symbolic testing of embedded software." Proceedings of the 9th India Software Engineering Conference. ACM, 2016](https://dl.acm.org/citation.cfm?id=2856642)
 
+This repository was forked and edited. The Source repository is: https://github.com/sujitkc/symtest
+
 
 ## Dependencies
 * Install [Gradle](https://gradle.org/install/).
